@@ -137,11 +137,11 @@ export default function Navbar() {
                         <Shield size={14} />
                         Verify
                     </Link>
-                    <Link to="/institution-portal" className="btn btn-secondary btn-sm">
+                    <Link to="/login" className="btn btn-secondary btn-sm">
                         <LogIn size={14} />
                         Login
                     </Link>
-                    <Link to="/contact" className="btn btn-primary btn-sm">
+                    <Link to="/signup" className="btn btn-primary btn-sm">
                         Get Started
                     </Link>
                 </div>

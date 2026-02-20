@@ -28,6 +28,7 @@ require('dotenv').config();
 const issuerRoutes = require('./routes/issuer');
 const recordsRoutes = require('./routes/records');
 const verifyRoutes = require('./routes/verify');
+const verifierRoutes = require('./routes/verifier');
 const keysRoutes = require('./routes/keys');
 const templatesRoutes = require('./routes/templates');
 const alertsRoutes = require('./routes/alerts');
@@ -44,6 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/issue', issuerRoutes);
 app.use('/api/records', recordsRoutes);
 app.use('/api/verify', verifyRoutes);
+app.use('/api/verifier', verifierRoutes);
 app.use('/api/keys', keysRoutes);
 app.use('/api/templates', templatesRoutes);
 app.use('/api/alerts', alertsRoutes);
@@ -60,6 +62,7 @@ app.get('/api/health', (req, res) => {
             issue: ['GET /api/issue/stats', 'POST /api/issue/prepare', 'POST /api/issue/finalize', 'POST /api/issue/batch'],
             records: ['GET /api/records', 'GET /api/records/:id', 'POST /api/records/:id/revoke', 'GET /api/records/:id/vc', 'GET /api/records/:id/qr'],
             verify: ['GET /api/verify/:hash', 'POST /api/verify/file', 'POST /api/verify/vc'],
+            verifier: ['POST /api/verifier/verify', 'GET /api/verifier/verify/:hash', 'GET /api/verifier/saved', 'GET /api/verifier/saved/export', 'POST /api/verifier/batch', 'GET/POST/DELETE /api/verifier/apikeys', 'GET /api/verifier/receipt/:id', 'POST /api/verifier/qr-offline', 'GET /api/verifier/snippets'],
             keys: ['GET /api/keys/info', 'POST /api/keys/rotate', 'GET /api/keys/multisig', 'POST /api/keys/multisig/propose'],
             templates: ['GET /api/templates', 'POST /api/templates', 'PUT /api/templates/:id', 'DELETE /api/templates/:id'],
             alerts: ['GET /api/alerts', 'POST /api/alerts/:i/resolve']

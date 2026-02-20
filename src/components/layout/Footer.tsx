@@ -95,7 +95,7 @@ export default function Footer() {
                             <h4>Product</h4>
                             <ul>
                                 {footerLinks.product.map((link) => (
-                                    <li key={link.href}>
+                                    <li key={link.label}>
                                         <Link to={link.href}>
                                             <ChevronRight size={12} />
                                             {link.label}
@@ -109,7 +109,7 @@ export default function Footer() {
                             <h4>Solutions</h4>
                             <ul>
                                 {footerLinks.solutions.map((link) => (
-                                    <li key={link.href}>
+                                    <li key={link.label}>
                                         <Link to={link.href}>
                                             <ChevronRight size={12} />
                                             {link.label}
@@ -123,7 +123,7 @@ export default function Footer() {
                             <h4>Resources</h4>
                             <ul>
                                 {footerLinks.resources.map((link) => (
-                                    <li key={link.href}>
+                                    <li key={link.label}>
                                         <Link to={link.href}>
                                             <ChevronRight size={12} />
                                             {link.label}
@@ -137,7 +137,7 @@ export default function Footer() {
                             <h4>Company</h4>
                             <ul>
                                 {footerLinks.company.map((link) => (
-                                    <li key={link.href}>
+                                    <li key={link.label}>
                                         <Link to={link.href}>
                                             <ChevronRight size={12} />
                                             {link.label}
