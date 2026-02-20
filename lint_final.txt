@@ -1,0 +1,175 @@
+[0m[0m
+[0m[4mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\BlockchainNetwork.tsx[24m[0m
+[0m   [2m6:12[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\BlockchainNetwork.tsx:6:12[0m
+[0m  4 |     const nodes = Array.from({ length: 15 }, (_, i) => ({[0m
+[0m  5 |         id: i,[0m
+[0m> 6 |         x: Math.random() * 100,[0m
+[0m    |            ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  7 |         y: Math.random() * 100,[0m
+[0m  8 |         size: Math.random() * 4 + 2,[0m
+[0m  9 |         delay: Math.random() * 5,                                                                                                                                   [2mreact-hooks/purity[22m[0m
+[0m   [2m7:12[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\BlockchainNetwork.tsx:7:12[0m
+[0m   5 |         id: i,[0m
+[0m   6 |         x: Math.random() * 100,[0m
+[0m>  7 |         y: Math.random() * 100,[0m
+[0m     |            ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m   8 |         size: Math.random() * 4 + 2,[0m
+[0m   9 |         delay: Math.random() * 5,[0m
+[0m  10 |     }));                                                                                                                                                                             [2mreact-hooks/purity[22m[0m
+[0m   [2m8:15[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\BlockchainNetwork.tsx:8:15[0m
+[0m   6 |         x: Math.random() * 100,[0m
+[0m   7 |         y: Math.random() * 100,[0m
+[0m>  8 |         size: Math.random() * 4 + 2,[0m
+[0m     |               ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m   9 |         delay: Math.random() * 5,[0m
+[0m  10 |     }));[0m
+[0m  11 |                                                                                                                                                                                         [2mreact-hooks/purity[22m[0m
+[0m   [2m9:16[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\BlockchainNetwork.tsx:9:16[0m
+[0m   7 |         y: Math.random() * 100,[0m
+[0m   8 |         size: Math.random() * 4 + 2,[0m
+[0m>  9 |         delay: Math.random() * 5,[0m
+[0m     |                ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  10 |     }));[0m
+[0m  11 |[0m
+[0m  12 |     return (                                                                                                                                                                                                           [2mreact-hooks/purity[22m[0m
+[0m  [2m26:36[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\BlockchainNetwork.tsx:26:36[0m
+[0m  24 |                             opacity: [0.3, 0.8, 0.3],[0m
+[0m  25 |                             scale: [0.8, 1.2, 0.8],[0m
+[0m> 26 |                             x: [0, Math.random() * 5 - 2.5, 0],[0m
+[0m     |                                    ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  27 |                             y: [0, Math.random() * 5 - 2.5, 0][0m
+[0m  28 |                         }}[0m
+[0m  29 |                         transition={{         [2mreact-hooks/purity[22m[0m
+[0m  [2m27:36[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\BlockchainNetwork.tsx:27:36[0m
+[0m  25 |                             scale: [0.8, 1.2, 0.8],[0m
+[0m  26 |                             x: [0, Math.random() * 5 - 2.5, 0],[0m
+[0m> 27 |                             y: [0, Math.random() * 5 - 2.5, 0][0m
+[0m     |                                    ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  28 |                         }}[0m
+[0m  29 |                         transition={{[0m
+[0m  30 |                             duration: 4 + Math.random() * 4,  [2mreact-hooks/purity[22m[0m
+[0m  [2m30:43[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\BlockchainNetwork.tsx:30:43[0m
+[0m  28 |                         }}[0m
+[0m  29 |                         transition={{[0m
+[0m> 30 |                             duration: 4 + Math.random() * 4,[0m
+[0m     |                                           ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  31 |                             repeat: Infinity,[0m
+[0m  32 |                             delay: node.delay[0m
+[0m  33 |                         }}                                                       [2mreact-hooks/purity[22m[0m
+[0m[0m
+[0m[4mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\FloatingParticles.tsx[24m[0m
+[0m   [2m6:15[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\FloatingParticles.tsx:6:15[0m
+[0m  4 |     const particles = Array.from({ length: 20 }, (_, i) => ({[0m
+[0m  5 |         id: i,[0m
+[0m> 6 |         size: Math.random() * 5 + 2,[0m
+[0m    |               ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  7 |         x: Math.random() * 100,[0m
+[0m  8 |         y: Math.random() * 100,[0m
+[0m  9 |         duration: Math.random() * 20 + 10,  [2mreact-hooks/purity[22m[0m
+[0m   [2m7:12[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\FloatingParticles.tsx:7:12[0m
+[0m   5 |         id: i,[0m
+[0m   6 |         size: Math.random() * 5 + 2,[0m
+[0m>  7 |         x: Math.random() * 100,[0m
+[0m     |            ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m   8 |         y: Math.random() * 100,[0m
+[0m   9 |         duration: Math.random() * 20 + 10,[0m
+[0m  10 |         delay: Math.random() * 5,                          [2mreact-hooks/purity[22m[0m
+[0m   [2m8:12[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\FloatingParticles.tsx:8:12[0m
+[0m   6 |         size: Math.random() * 5 + 2,[0m
+[0m   7 |         x: Math.random() * 100,[0m
+[0m>  8 |         y: Math.random() * 100,[0m
+[0m     |            ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m   9 |         duration: Math.random() * 20 + 10,[0m
+[0m  10 |         delay: Math.random() * 5,[0m
+[0m  11 |     }));                                [2mreact-hooks/purity[22m[0m
+[0m   [2m9:19[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\FloatingParticles.tsx:9:19[0m
+[0m   7 |         x: Math.random() * 100,[0m
+[0m   8 |         y: Math.random() * 100,[0m
+[0m>  9 |         duration: Math.random() * 20 + 10,[0m
+[0m     |                   ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  10 |         delay: Math.random() * 5,[0m
+[0m  11 |     }));[0m
+[0m  12 |                                                              [2mreact-hooks/purity[22m[0m
+[0m  [2m10:16[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\animations\FloatingParticles.tsx:10:16[0m
+[0m   8 |         y: Math.random() * 100,[0m
+[0m   9 |         duration: Math.random() * 20 + 10,[0m
+[0m> 10 |         delay: Math.random() * 5,[0m
+[0m     |                ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  11 |     }));[0m
+[0m  12 |[0m
+[0m  13 |     return (                                                                                   [2mreact-hooks/purity[22m[0m
+[0m[0m
+[0m[4mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\layout\Navbar.tsx[24m[0m
+[0m  [2m56:9[22m  [31merror[39m  Error: Calling setState synchronously within an effect can trigger cascading renders[0m
+[0m[0m
+[0mEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:[0m
+[0m* Update external systems with the latest state from React.[0m
+[0m* Subscribe for updates from some external system, calling setState in a callback function when external state changes.[0m
+[0m[0m
+[0mCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).[0m
+[0m[0m
+[0mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\components\layout\Navbar.tsx:56:9[0m
+[0m  54 |[0m
+[0m  55 |     useEffect(() => {[0m
+[0m> 56 |         setMobileOpen(false);[0m
+[0m     |         ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect[0m
+[0m  57 |         setActiveDropdown(null);[0m
+[0m  58 |     }, [location]);[0m
+[0m  59 |  [2mreact-hooks/set-state-in-effect[22m[0m
+[0m[0m
+[0m[4mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\global.d.ts[24m[0m
+[0m  [2m5:20[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mC:\Users\Meetb\Desktop\DIGIlocker\Digi-Locker_2.0\src\pages\Home.tsx[24m[0m
+[0m  [2m183:8[22m  [33mwarning[39m  React Hook useEffect has a missing dependency: 'words.length'. Either include it or remove the dependency array  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m[0m
+[0m[31m[1m✖ 15 problems (14 errors, 1 warning)[22m[39m[0m
+[0m[31m[1m[22m[39m[0m

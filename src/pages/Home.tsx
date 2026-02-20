@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -168,13 +168,14 @@ function BlockchainAnimation() {
     );
 }
 
+const words = ['Academic', 'Professional', 'Verified', 'Trusted'];
+
 // ===================== HERO SECTION =====================
 function HeroSection() {
     const { scrollY } = useScroll();
     const y = useTransform(scrollY, [0, 600], [0, 200]);
     const opacity = useTransform(scrollY, [0, 400], [1, 0]);
 
-    const words = ['Academic', 'Professional', 'Verified', 'Trusted'];
     const [wordIndex, setWordIndex] = useState(0);
 
     useEffect(() => {

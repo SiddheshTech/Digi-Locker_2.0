@@ -38,6 +38,16 @@ import InstitutionPortal from './pages/InstitutionPortal';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 
+// Issuer Components
+import IssuerLayout from './layouts/IssuerLayout';
+import Dashboard from './pages/issuer/Dashboard';
+import IssueCredential from './pages/issuer/IssueCredential';
+import RecordsList from './pages/issuer/RecordsList';
+import BatchIssue from './pages/issuer/BatchIssue';
+import KeyManagement from './pages/issuer/KeyManagement';
+import Templates from './pages/issuer/Templates';
+import Alerts from './pages/issuer/Alerts';
+
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -85,8 +95,19 @@ function App() {
           <Route path="/institution-portal" element={<PageTransition><InstitutionPortal /></PageTransition>} />
           <Route path="/privacy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
           <Route path="/terms" element={<PageTransition><TermsOfService /></PageTransition>} />
+
+          {/* Issuer Routes */}
+          <Route path="/issuer" element={<IssuerLayout />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="issue" element={<IssueCredential />} />
+            <Route path="records" element={<RecordsList />} />
+            <Route path="batch" element={<BatchIssue />} />
+            <Route path="keys" element={<KeyManagement />} />
+            <Route path="templates" element={<Templates />} />
+            <Route path="alerts" element={<Alerts />} />
+          </Route>
         </Routes>
-      </AnimatePresence>
+      </AnimatePresence >
       <Footer />
     </>
   );

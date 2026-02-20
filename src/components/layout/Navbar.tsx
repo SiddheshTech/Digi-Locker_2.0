@@ -53,9 +53,13 @@ export default function Navbar() {
     }, []);
 
     useEffect(() => {
-        setMobileOpen(false);
-        setActiveDropdown(null);
-    }, [location]);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - Setting state on navigation is required here
+        if (mobileOpen) setMobileOpen(false);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - Setting state on navigation is required here
+        if (activeDropdown) setActiveDropdown(null);
+    }, [location, mobileOpen, activeDropdown]);
 
     useEffect(() => {
         const handleClick = (e: MouseEvent) => {
