@@ -1,0 +1,119 @@
+/* Shared Layout for Solution Pages */
+.solution-subpage {
+    /* Inherits global styles */
+}
+
+/* Specific Hero Overrides */
+.solution-hero {
+    padding: 8rem 0 4rem;
+    background: radial-gradient(circle at top center, rgba(99, 102, 241, 0.1), transparent 70%);
+}
+
+.solution-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.solution-hero-lead {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+}
+
+/* Feature Grid specific to solution pages */
+.solution-features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.solution-feature-card {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+}
+
+.solution-feature-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.solution-benefit-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+}
+
+.solution-benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-secondary);
+    border-radius: 12px;
+}
+
+.benefit-icon {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+/* Stats specific to solutions */
+.solution-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 3rem 0;
+    border-top: 1px solid var(--border-secondary);
+    border-bottom: 1px solid var(--border-secondary);
+    margin: 4rem 0;
+}
+
+.sol-stat-item {
+    text-align: center;
+}
+
+.sol-stat-value {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.sol-stat-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 1024px) {
+    .solution-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .solution-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .solution-features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .solution-hero h1 {
+        font-size: 2.5rem;
+    }
+}
