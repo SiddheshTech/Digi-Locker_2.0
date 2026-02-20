@@ -40,6 +40,7 @@ import TermsOfService from './pages/TermsOfService';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import IssuerDashboard from './pages/issuer/IssuerDashboard';
+import StudentDashboard from './pages/student/StudentDashboard';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -60,7 +61,8 @@ function App() {
   const isAppView = path.startsWith('/dashboard') ||
     path.startsWith('/login') ||
     path.startsWith('/signup') ||
-    path.startsWith('/issuer');
+    path.startsWith('/issuer') ||
+    path.startsWith('/student');
 
   return (
     <>
@@ -91,6 +93,7 @@ function App() {
           <Route path="/resources/faq" element={<PageTransition><Faq /></PageTransition>} />
           <Route path="/dashboard/*" element={<PageTransition><DashboardPreview /></PageTransition>} />
           <Route path="/issuer/*" element={<PageTransition><IssuerDashboard /></PageTransition>} />
+          <Route path="/student/*" element={<PageTransition><StudentDashboard /></PageTransition>} />
           <Route path="/verify" element={<PageTransition><VerificationPortal /></PageTransition>} />
           <Route path="/institution-portal" element={<PageTransition><InstitutionPortal /></PageTransition>} />
           <Route path="/privacy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
