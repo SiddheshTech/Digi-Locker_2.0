@@ -37,6 +37,9 @@ import VerificationPortal from './pages/VerificationPortal';
 import InstitutionPortal from './pages/InstitutionPortal';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import IssuerDashboard from './pages/issuer/IssuerDashboard';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -53,11 +56,17 @@ import FloatingParticles from './components/animations/FloatingParticles';
 function App() {
   const location = useLocation();
 
+  const path = location.pathname.toLowerCase();
+  const isAppView = path.startsWith('/dashboard') ||
+    path.startsWith('/login') ||
+    path.startsWith('/signup') ||
+    path.startsWith('/issuer');
+
   return (
     <>
       <ScrollToTop />
-      <Navbar />
-      <FloatingParticles />
+      {!isAppView && <Navbar />}
+      {!isAppView && <FloatingParticles />}
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<PageTransition><Home /></PageTransition>} />
@@ -80,14 +89,17 @@ function App() {
           <Route path="/resources/blog" element={<PageTransition><Blog /></PageTransition>} />
           <Route path="/resources/case-studies" element={<PageTransition><CaseStudies /></PageTransition>} />
           <Route path="/resources/faq" element={<PageTransition><Faq /></PageTransition>} />
-          <Route path="/dashboard" element={<PageTransition><DashboardPreview /></PageTransition>} />
+          <Route path="/dashboard/*" element={<PageTransition><DashboardPreview /></PageTransition>} />
+          <Route path="/issuer/*" element={<PageTransition><IssuerDashboard /></PageTransition>} />
           <Route path="/verify" element={<PageTransition><VerificationPortal /></PageTransition>} />
           <Route path="/institution-portal" element={<PageTransition><InstitutionPortal /></PageTransition>} />
           <Route path="/privacy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
           <Route path="/terms" element={<PageTransition><TermsOfService /></PageTransition>} />
+          <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+          <Route path="/signup" element={<PageTransition><SignUp /></PageTransition>} />
         </Routes>
       </AnimatePresence>
-      <Footer />
+      {!isAppView && <Footer />}
     </>
   );
 }
