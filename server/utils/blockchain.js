@@ -83,6 +83,29 @@ async function revokeOnChain(payloadHash, reason) {
     return { txHash: receipt.hash, blockNumber: receipt.blockNumber, mock: false };
 }
 
+/** Query credential directly from on-chain contract (read-only, no signer needed) */
+async function queryCredentialOnChain(payloadHash) {
+    const provider = getProvider();
+    const addr = process.env.CONTRACT_ADDRESS;
+    if (!provider || !addr) return { found: false, mock: true, message: 'Mock mode — no RPC/contract configured' };
+    try {
+        const contract = new ethers.Contract(addr, CONTRACT_ABI, provider);
+        const bytes32 = '0x' + payloadHash.replace(/^0x/, '').padStart(64, '0');
+        const isIssued = await contract.isIssued(bytes32);
+        if (!isIssued) return { found: false, mock: false, issued: false };
+        const [issuerId, timestamp, revoked, reason] = await contract.getCredential(bytes32);
+        return {
+            found: true, mock: false,
+            issuerId: String(issuerId),
+            issuedAt: new Date(Number(timestamp) * 1000).toISOString(),
+            revoked: Boolean(revoked),
+            revocationReason: String(reason)
+        };
+    } catch (err) {
+        return { found: false, error: err.message };
+    }
+}
+
 /** Verify a transaction hash on-chain */
 async function verifyTransaction(txHash) {
     const provider = getProvider();
@@ -112,4 +135,12 @@ function mockHash() {
     return Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
 }
 
-module.exports = { signPayloadHash, issueOnChain, revokeOnChain, verifyTransaction, getWalletInfo, mockHash };
+module.exports = {
+    signPayloadHash,
+    issueOnChain,
+    revokeOnChain,
+    verifyTransaction,
+    queryCredentialOnChain,
+    getWalletInfo,
+    mockHash
+};

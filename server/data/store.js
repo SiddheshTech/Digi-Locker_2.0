@@ -4,6 +4,8 @@
 const store = {
     credentials: [],
     revocations: [],
+    verifierSavedVerifications: [],
+    verifierApiKeys: [],
     templates: [
         {
             id: 'tpl-001',
