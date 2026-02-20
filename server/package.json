@@ -1,4 +1,14 @@
 {
+  "name": "digilocker-server",
+  "version": "2.0.0",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "compile": "npx hardhat compile",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.js --network sepolia",
+    "chain": "npx hardhat node"
+  },
   "dependencies": {
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
@@ -15,5 +25,10 @@
     "pdfkit": "^0.15.0",
     "qrcode": "^1.5.4",
     "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "hardhat": "^3.1.9",
+    "nodemon": "^3.1.13"
   }
 }

@@ -1,7 +1,9 @@
-import { Bell, Search, ChevronDown, LayoutDashboard, FileText, Key, Filter, Download, Plus, Settings } from 'lucide-react';
+import { Bell, Search, LayoutDashboard, FileText, Key, Filter, Download, Plus, Settings, Wallet } from 'lucide-react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import { IssuerOverview, IssueCredential, RecordsList, KeyManagement, BatchIssue, TemplateManager, FraudAlerts } from './IssuerViews';
 import './Issuer.css';
+import WalletButton from '../../components/wallet/WalletButton';
+import { useWallet } from '../../context/WalletContext';
 
 export default function IssuerDashboard() {
     const location = useLocation();

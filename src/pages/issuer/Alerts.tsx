@@ -4,14 +4,17 @@ import { AlertTriangle, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface Alert {
-    id: string;
+    id?: string;
+    index?: number;
     type: string;
     severity: string;
     status: string;
-    details: {
+    resolved: boolean;
+    details?: {
         reason: string;
         [key: string]: unknown;
     };
+    message?: string;
     timestamp: string;
 }
 
@@ -22,7 +25,9 @@ export default function Alerts() {
     const fetchAlerts = async () => {
         try {
             const res = await axios.get('http://localhost:5000/api/alerts');
-            setAlerts(res.data);
+            // API returns { total, alerts } — map with index for resolve calls
+            const alertsWithIndex = (res.data.alerts || []).map((a: Alert, i: number) => ({ ...a, index: i }));
+            setAlerts(alertsWithIndex);
         } catch (err) {
             console.error(err);
         } finally {
@@ -34,9 +39,9 @@ export default function Alerts() {
         fetchAlerts();
     }, []);
 
-    const handleResolve = async (id: string, resolution: string) => {
+    const handleResolve = async (index: number, resolvedBy: string) => {
         try {
-            await axios.post(`http://localhost:5000/api/alerts/${id}/resolve`, { resolution });
+            await axios.post(`http://localhost:5000/api/alerts/${index}/resolve`, { resolvedBy });
             fetchAlerts();
         } catch {
             alert('Failed to resolve alert');
@@ -56,34 +61,34 @@ export default function Alerts() {
                         No active alerts. System is secure.
                     </div>
                 ) : (
-                    alerts.map(alert => (
+                    alerts.map((alert, i) => (
                         <motion.div
-                            key={alert.id}
+                            key={alert.index ?? i}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className={`p-6 rounded-xl border ${alert.severity === 'high' ? 'bg-red-500/10 border-red-500/30' :
+                            className={`p-6 rounded-xl border ${alert.severity?.toLowerCase() === 'high' ? 'bg-red-500/10 border-red-500/30' :
                                 'bg-yellow-500/10 border-yellow-500/30'
                                 }`}
                         >
                             <div className="flex items-start justify-between">
                                 <div className="flex gap-4">
-                                    <AlertTriangle className={alert.severity === 'high' ? 'text-red-400' : 'text-yellow-400'} size={24} />
+                                    <AlertTriangle className={alert.severity?.toLowerCase() === 'high' ? 'text-red-400' : 'text-yellow-400'} size={24} />
                                     <div>
                                         <h3 className="text-lg font-bold text-white uppercase tracking-wide">{alert.type}</h3>
-                                        <p className="text-gray-300 mt-1">{alert.details.reason}</p>
+                                        <p className="text-gray-300 mt-1">{alert.message || alert.details?.reason}</p>
                                         <span className="text-xs text-gray-500 mt-2 block">{new Date(alert.timestamp).toLocaleString()}</span>
                                     </div>
                                 </div>
-                                {alert.status === 'open' ? (
+                                {!alert.resolved ? (
                                     <div className="flex gap-2">
                                         <button
-                                            onClick={() => handleResolve(alert.id, 'dismissed')}
+                                            onClick={() => handleResolve(alert.index ?? i, 'admin')}
                                             className="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
                                         >
                                             Dismiss
                                         </button>
                                         <button
-                                            onClick={() => handleResolve(alert.id, 'investigated')}
+                                            onClick={() => handleResolve(alert.index ?? i, 'admin')}
                                             className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                                         >
                                             Mark Resolved
@@ -91,7 +96,7 @@ export default function Alerts() {
                                     </div>
                                 ) : (
                                     <span className="px-3 py-1 bg-green-500/20 text-green-400 text-xs rounded-full border border-green-500/30">
-                                        Resolved: {alert.status}
+                                        Resolved
                                     </span>
                                 )}
                             </div>

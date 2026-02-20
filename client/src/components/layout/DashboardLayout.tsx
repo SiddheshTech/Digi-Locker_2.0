@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, ChevronLeft, ChevronRight, LogOut, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import WalletButton from "@/components/wallet/WalletButton";
 
 interface NavItem {
   label: string;
@@ -86,6 +87,7 @@ const DashboardLayout = ({ children, role, roleLabel, navItems }: DashboardLayou
             {navItems.find((i) => i.path === location.pathname)?.label || roleLabel}
           </h1>
           <div className="flex items-center gap-3">
+            <WalletButton />
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="w-5 h-5 text-muted-foreground" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent" />
