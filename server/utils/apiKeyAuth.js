@@ -1,24 +1,18 @@
-/**
- * utils/apiKeyAuth.js
- * API Key validation for programmatic verification
- * Verifier API endpoints can accept ?api_key=xxx or Authorization: Bearer xxx
- */
-
-const store = require('../data/store');
-const crypto = require('crypto');
+import store from '../data/store.js';
+import crypto from 'crypto';
 
 /** Generate a new API key (prefix dlk_ for identification) */
-function generateApiKey() {
+export function generateApiKey() {
     return 'dlk_' + crypto.randomBytes(24).toString('hex');
 }
 
 /** Hash API key for storage (never store raw keys) */
-function hashApiKey(key) {
+export function hashApiKey(key) {
     return crypto.createHash('sha256').update(key).digest('hex');
 }
 
 /** Extract API key from request: query param or Authorization header */
-function extractApiKey(req) {
+export function extractApiKey(req) {
     const query = req.query?.api_key;
     const auth = req.headers?.authorization;
     if (query && typeof query === 'string') return query;
@@ -27,7 +21,7 @@ function extractApiKey(req) {
 }
 
 /** Middleware: optional API key — validates if present, continues either way */
-function optionalApiKey(req, res, next) {
+export function optionalApiKey(req, res, next) {
     const key = extractApiKey(req);
     if (!key) return next();
     const hashed = hashApiKey(key);
@@ -40,7 +34,7 @@ function optionalApiKey(req, res, next) {
 }
 
 /** Middleware: require API key for programmatic access (used for rate-limited endpoints) */
-function requireApiKey(req, res, next) {
+export function requireApiKey(req, res, next) {
     const key = extractApiKey(req);
     if (!key) return res.status(401).json({ error: 'API key required. Use ?api_key=xxx or Authorization: Bearer xxx' });
     const hashed = hashApiKey(key);
@@ -50,11 +44,3 @@ function requireApiKey(req, res, next) {
     req.apiKeyId = found.id;
     next();
 }
-
-module.exports = {
-    generateApiKey,
-    hashApiKey,
-    extractApiKey,
-    optionalApiKey,
-    requireApiKey
-};

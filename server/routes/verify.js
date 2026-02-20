@@ -5,13 +5,13 @@
  * POST /api/verify/vc           — verify a W3C VC JSON
  */
 
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const multer = require('multer');
-const store = require('../data/store');
-const { sha256 } = require('../utils/crypto');
-const { verifyTransaction } = require('../utils/blockchain');
-const { verifyVCStructure } = require('../utils/vc');
+import multer from 'multer';
+import store from '../data/store.js';
+import { sha256 } from '../utils/crypto.js';
+import { verifyTransaction } from '../utils/blockchain.js';
+import { verifyVCStructure } from '../utils/vc.js';
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -96,4 +96,4 @@ router.post('/vc', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

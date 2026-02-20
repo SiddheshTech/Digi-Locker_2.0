@@ -1,0 +1,35 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_19-e8e229f0405de46b68a878abc9c19c79f40826f6",
+  "solcVersion": "0.8.19",
+  "solcLongVersion": "0.8.19+commit.7dd6d404",
+  "userSourceNameMap": {
+    "contract/CredentialRegistry.sol": "project/contract/CredentialRegistry.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "paris",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contract/CredentialRegistry.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.19;\r\n\r\n/**\r\n * @title CredentialRegistry\r\n * @notice On-chain registry for academic credential hashes\r\n *         Stores ONLY: hash, issuerId, timestamp, revocationFlag\r\n *         NO personal data (privacy by design)\r\n *\r\n * Deploy to Sepolia or local Hardhat, then set CONTRACT_ADDRESS in .env\r\n */\r\ncontract CredentialRegistry {\r\n\r\n    struct Credential {\r\n        string issuerId;\r\n        uint256 timestamp;\r\n        bool revoked;\r\n        string revocationReason;\r\n    }\r\n\r\n    mapping(bytes32 => Credential) private credentials;\r\n\r\n    event CredentialIssued(bytes32 indexed payloadHash, string issuerId, uint256 timestamp);\r\n    event CredentialRevoked(bytes32 indexed payloadHash, string reason, uint256 timestamp);\r\n\r\n    function issueCredential(bytes32 payloadHash, string memory issuerId) external returns (bool) {\r\n        require(credentials[payloadHash].timestamp == 0, \"Already issued\");\r\n        credentials[payloadHash] = Credential({ issuerId: issuerId, timestamp: block.timestamp, revoked: false, revocationReason: \"\" });\r\n        emit CredentialIssued(payloadHash, issuerId, block.timestamp);\r\n        return true;\r\n    }\r\n\r\n    function revokeCredential(bytes32 payloadHash, string memory reason) external returns (bool) {\r\n        require(credentials[payloadHash].timestamp != 0, \"Not issued\");\r\n        require(!credentials[payloadHash].revoked, \"Already revoked\");\r\n        credentials[payloadHash].revoked = true;\r\n        credentials[payloadHash].revocationReason = reason;\r\n        emit CredentialRevoked(payloadHash, reason, block.timestamp);\r\n        return true;\r\n    }\r\n\r\n    function getCredential(bytes32 payloadHash) external view returns (string memory issuerId, uint256 timestamp, bool revoked, string memory reason) {\r\n        Credential memory c = credentials[payloadHash];\r\n        return (c.issuerId, c.timestamp, c.revoked, c.revocationReason);\r\n    }\r\n\r\n    function isRevoked(bytes32 payloadHash) external view returns (bool) {\r\n        return credentials[payloadHash].revoked;\r\n    }\r\n\r\n    function isIssued(bytes32 payloadHash) external view returns (bool) {\r\n        return credentials[payloadHash].timestamp != 0;\r\n    }\r\n}\r\n"
+      }
+    }
+  }
+}

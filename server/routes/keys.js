@@ -8,11 +8,11 @@
  * POST /api/keys/multisig/:id/execute — execute
  */
 
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid');
-const { getWalletInfo, mockHash } = require('../utils/blockchain');
-const store = require('../data/store');
+import { v4 as uuidv4 } from 'uuid';
+import { getWalletInfo, mockHash } from '../utils/blockchain.js';
+import store from '../data/store.js';
 
 // Wallet Info
 router.get('/info', async (req, res) => {
@@ -87,4 +87,4 @@ router.post('/multisig/:id/execute', (req, res) => {
     res.json({ success: true, txHash, proposal });
 });
 
-module.exports = router;
+export default router;

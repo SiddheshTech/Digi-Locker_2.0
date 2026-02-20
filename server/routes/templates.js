@@ -6,10 +6,10 @@
  * DELETE /api/templates/:id  — delete
  */
 
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid');
-const store = require('../data/store');
+import { v4 as uuidv4 } from 'uuid';
+import store from '../data/store.js';
 
 router.get('/', (req, res) => res.json(store.templates));
 
@@ -41,4 +41,4 @@ router.delete('/:id', (req, res) => {
     res.json({ success: true, message: 'Template deleted' });
 });
 
-module.exports = router;
+export default router;

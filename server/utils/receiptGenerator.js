@@ -4,20 +4,20 @@
  * Uses crypto for auditor signature + PDFKit for PDF output
  */
 
-const crypto = require('crypto');
-const PDFDocument = require('pdfkit');
+import crypto from 'crypto';
+import PDFDocument from 'pdfkit';
 
 const AUDITOR_SECRET = process.env.AUDITOR_SECRET || 'digilocker-auditor-default-secret';
 
 /** Create a deterministic auditor signature for receipt data */
-function signReceipt(data) {
+export function signReceipt(data) {
     const keys = Object.keys(data).filter(k => k !== 'auditorSignature').sort();
     const payload = JSON.stringify(keys.map(k => data[k]));
     return crypto.createHmac('sha256', AUDITOR_SECRET).update(payload).digest('hex');
 }
 
 /** Build receipt data and signature */
-function buildReceiptData(verification) {
+export function buildReceiptData(verification) {
     const data = {
         verificationId: verification.id,
         payloadHash: verification.payloadHash || verification.uploadedFileHash,
@@ -33,7 +33,7 @@ function buildReceiptData(verification) {
 }
 
 /** Generate PDF receipt buffer */
-async function generateReceiptPDF(verification) {
+export async function generateReceiptPDF(verification) {
     const data = buildReceiptData(verification);
     return new Promise((resolve, reject) => {
         const doc = new PDFDocument({ size: 'A4', margin: 50 });
@@ -62,7 +62,7 @@ async function generateReceiptPDF(verification) {
 }
 
 /** Plain text receipt fallback */
-function generateReceiptBuffer(verification) {
+export function generateReceiptBuffer(verification) {
     const data = buildReceiptData(verification);
     const lines = [
         'DIGI-LOCKER VERIFICATION RECEIPT',
@@ -78,10 +78,3 @@ function generateReceiptBuffer(verification) {
     ];
     return Buffer.from(lines.join('\n'), 'utf8');
 }
-
-module.exports = {
-    signReceipt,
-    buildReceiptData,
-    generateReceiptPDF,
-    generateReceiptBuffer
-};

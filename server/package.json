@@ -1,13 +1,14 @@
 {
   "name": "digilocker-server",
   "version": "2.0.0",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "compile": "npx hardhat compile",
-    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
-    "deploy:sepolia": "npx hardhat run scripts/deploy.js --network sepolia",
-    "chain": "npx hardhat node"
+    "compile": "npx hardhat --config hardhat.config.cjs compile",
+    "deploy:local": "node scripts/deploy_simple.js",
+    "deploy:sepolia": "npx hardhat --config hardhat.config.cjs run scripts/deploy.js --network sepolia",
+    "chain": "npx hardhat --config hardhat.config.cjs node"
   },
   "dependencies": {
     "body-parser": "^2.2.2",

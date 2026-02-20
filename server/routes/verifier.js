@@ -11,17 +11,17 @@
  * - Employer Integration Snippets: SDK code blocks
  */
 
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
-const { parse } = require('csv-parse/sync');
-const { stringify } = require('csv-stringify/sync');
-const store = require('../data/store');
-const { sha256 } = require('../utils/crypto');
-const { verifyTransaction, queryCredentialOnChain } = require('../utils/blockchain');
-const { generateApiKey, hashApiKey } = require('../utils/apiKeyAuth');
-const { generateReceiptPDF } = require('../utils/receiptGenerator');
+import multer from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import { parse } from 'csv-parse/sync';
+import { stringify } from 'csv-stringify/sync';
+import store from '../data/store.js';
+import { sha256 } from '../utils/crypto.js';
+import { verifyTransaction, queryCredentialOnChain } from '../utils/blockchain.js';
+import { generateApiKey, hashApiKey } from '../utils/apiKeyAuth.js';
+import { generateReceiptPDF } from '../utils/receiptGenerator.js';
 
 const upload = multer({ storage: multer.memoryStorage() });
 const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
@@ -419,4 +419,4 @@ HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString(
     });
 });
 
-module.exports = router;
+export default router;

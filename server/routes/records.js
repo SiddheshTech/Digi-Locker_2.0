@@ -7,12 +7,12 @@
  * GET    /api/records/:id/qr     — QR code for verification
  */
 
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const store = require('../data/store');
-const { revokeOnChain } = require('../utils/blockchain');
-const { buildVerifiableCredential } = require('../utils/vc');
-const { generateQRCode } = require('../utils/qr');
+import store from '../data/store.js';
+import { revokeOnChain } from '../utils/blockchain.js';
+import { buildVerifiableCredential } from '../utils/vc.js';
+import { generateQRCode } from '../utils/qr.js';
 
 // List All Records
 router.get('/', (req, res) => {
@@ -90,4 +90,4 @@ router.get('/:id/qr', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

@@ -7,19 +7,19 @@
  * GET  /api/issue/batch/:id  — get batch job result
  */
 
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const multer = require('multer');
-const csv = require('csv-parser');
-const { Readable } = require('stream');
-const { v4: uuidv4 } = require('uuid');
+import multer from 'multer';
+import csv from 'csv-parser';
+import { Readable } from 'stream';
+import { v4 as uuidv4 } from 'uuid';
 
-const store = require('../data/store');
-const { buildCredentialPayload, buildMerkleTree, getMerkleProof } = require('../utils/crypto');
-const { signPayloadHash, issueOnChain } = require('../utils/blockchain');
-const { buildVerifiableCredential } = require('../utils/vc');
-const { generateQRCode } = require('../utils/qr');
-const { detectAnomalies, saveAlerts } = require('../utils/fraud');
+import store from '../data/store.js';
+import { buildCredentialPayload, buildMerkleTree, getMerkleProof, canonicalizeCredential } from '../utils/crypto.js';
+import { signPayloadHash, issueOnChain } from '../utils/blockchain.js';
+import { buildVerifiableCredential } from '../utils/vc.js';
+import { generateQRCode } from '../utils/qr.js';
+import { detectAnomalies, saveAlerts } from '../utils/fraud.js';
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -48,12 +48,11 @@ router.post('/prepare', async (req, res) => {
             return res.status(400).json({ error: 'Missing fields: studentName, rollNo, degree, year, fileHash' });
         }
         const issuerId = req.headers['x-issuer-address'] || '0xMOCK_ISSUER';
-        const { payload, canonical, payloadHash } = buildCredentialPayload({ studentName, rollNo, degree, year, serialNo }, fileHash, issuerId);
+        const { payload, payloadHash } = buildCredentialPayload({ studentName, rollNo, degree, year, serialNo }, fileHash, issuerId);
         const anomalies = detectAnomalies(payload, issuerId);
 
         res.json({
             payload,
-            canonical,
             payloadHash,
             onChainPreview: {
                 issuerId, hash: payloadHash, timestamp: payload.timestamp, revocationFlag: false,
@@ -136,14 +135,17 @@ router.post('/batch', upload.single('file'), async (req, res) => {
             row.fileHash || 'no-file', issuerId
         ));
 
-        const { tree, root } = buildMerkleTree(leaves.map(l => l.canonical));
+        // Use canonicalizeCredential for Merkle Tree leaves
+        const leafHashes = leaves.map(l => canonicalizeCredential(l.payload));
+        const tree = buildMerkleTree(leafHashes);
+        const root = tree.getHexRoot();
 
         const studentsWithProofs = leaves.map((leaf, i) => ({
             index: i,
             studentName: leaf.payload.studentName,
             rollNo: leaf.payload.rollNo,
             payloadHash: leaf.payloadHash,
-            merkleProof: getMerkleProof(tree, leaf.canonical)
+            merkleProof: getMerkleProof(tree, canonicalizeCredential(leaf.payload))
         }));
 
         const chainResult = await issueOnChain(root, issuerId);
@@ -163,4 +165,4 @@ router.get('/batch/:batchId', (req, res) => {
     res.json(job);
 });
 
-module.exports = router;
+export default router;

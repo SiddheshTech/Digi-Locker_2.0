@@ -25,4 +25,4 @@ const store = {
     batchJobs: []
 };
 
-module.exports = store;
+export default store;

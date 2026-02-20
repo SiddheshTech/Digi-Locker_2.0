@@ -1,9 +1,9 @@
 /**
  * utils/vc.js — W3C Verifiable Credential (JSON-LD) builder
  */
-const { sha256 } = require('./crypto');
+import { sha256 } from './crypto.js';
 
-function buildVerifiableCredential(record) {
+export function buildVerifiableCredential(record) {
     const { payload, payloadHash, txHash, signature, id } = record;
     return {
         '@context': [
@@ -41,7 +41,23 @@ function buildVerifiableCredential(record) {
     };
 }
 
-function verifyVCStructure(vc) {
+export function getVerificationUrl(payloadHash) {
+    return `${BASE_URL}/api/verify/${payloadHash}`;
+}
+
+export async function generateQRCode(payloadHash) {
+    const url = getVerificationUrl(payloadHash);
+    const qrDataUrl = await QRCode.toDataURL(url, { errorCorrectionLevel: 'H', width: 300 });
+    return { url, qrDataUrl };
+}
+
+export async function generateQRCodeSVG(payloadHash) {
+    const url = getVerificationUrl(payloadHash);
+    const svg = await QRCode.toString(url, { type: 'svg' });
+    return { url, svg };
+}
+
+export function verifyVCStructure(vc) {
     const errors = [];
     if (!vc['@context']) errors.push('Missing @context');
     if (!vc['type'] || !vc['type'].includes('VerifiableCredential')) errors.push('Missing VerifiableCredential type');
@@ -50,5 +66,3 @@ function verifyVCStructure(vc) {
     if (!vc['proof']) errors.push('Missing proof');
     return { valid: errors.length === 0, errors };
 }
-
-module.exports = { buildVerifiableCredential, verifyVCStructure };

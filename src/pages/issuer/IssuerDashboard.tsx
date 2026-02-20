@@ -1,9 +1,8 @@
-import { Bell, Search, LayoutDashboard, FileText, Key, Filter, Download, Plus, Settings, Wallet } from 'lucide-react';
+import { Bell, Search, ChevronDown, LayoutDashboard, FileText, Key, Filter, Download, Plus, Settings } from 'lucide-react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import { IssuerOverview, IssueCredential, RecordsList, KeyManagement, BatchIssue, TemplateManager, FraudAlerts } from './IssuerViews';
 import './Issuer.css';
 import WalletButton from '../../components/wallet/WalletButton';
-import { useWallet } from '../../context/WalletContext';
 
 export default function IssuerDashboard() {
     const location = useLocation();
@@ -66,6 +65,7 @@ export default function IssuerDashboard() {
                             <input type="text" placeholder="Search records, TX hashes..." />
                         </div>
                         <div className="dash-user">
+                            <WalletButton />
                             <div className="dash-icon"><Bell size={18} /></div>
                             <div className="dash-avatar" style={{ background: 'var(--primary-600)' }}>IP</div>
                             <span>Institution Admin</span>

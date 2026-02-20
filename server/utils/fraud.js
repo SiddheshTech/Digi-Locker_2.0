@@ -1,12 +1,12 @@
 /**
  * utils/fraud.js — Fraud/anomaly detection
  */
-const store = require('../data/store');
+import store from '../data/store.js';
 
 const RATE_LIMIT_PER_HOUR = 20;
 const DUPLICATE_WINDOW_MS = 60000;
 
-function detectAnomalies(payload, issuerId) {
+export function detectAnomalies(payload, issuerId) {
     const alerts = [];
     const now = Date.now();
     const windowStart = now - 60 * 60 * 1000;
@@ -59,9 +59,7 @@ function detectAnomalies(payload, issuerId) {
     return alerts;
 }
 
-function saveAlerts(alerts, payloadHash, issuerId) {
+export function saveAlerts(alerts, payloadHash, issuerId) {
     const ts = new Date().toISOString();
     alerts.forEach(a => store.alerts.push({ ...a, payloadHash, issuerId, timestamp: ts, resolved: false }));
 }
-
-module.exports = { detectAnomalies, saveAlerts };

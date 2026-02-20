@@ -4,9 +4,9 @@
  * POST /api/alerts/:i/resolve   — resolve alert
  */
 
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const store = require('../data/store');
+import store from '../data/store.js';
 
 router.get('/', (req, res) => {
     const { resolved } = req.query;
@@ -27,4 +27,4 @@ router.post('/:index/resolve', (req, res) => {
     res.json({ success: true, alert: store.alerts[idx] });
 });
 
-module.exports = router;
+export default router;

@@ -20,18 +20,19 @@
  *   /api/alerts/*    — alerts.js   (fraud alerts)
  */
 
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const issuerRoutes = require('./routes/issuer');
-const recordsRoutes = require('./routes/records');
-const verifyRoutes = require('./routes/verify');
-const verifierRoutes = require('./routes/verifier');
-const keysRoutes = require('./routes/keys');
-const templatesRoutes = require('./routes/templates');
-const alertsRoutes = require('./routes/alerts');
+import issuerRoutes from './routes/issuer.js';
+import recordsRoutes from './routes/records.js';
+import verifyRoutes from './routes/verify.js';
+import verifierRoutes from './routes/verifier.js';
+import keysRoutes from './routes/keys.js';
+import templatesRoutes from './routes/templates.js';
+import alertsRoutes from './routes/alerts.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -88,4 +89,4 @@ app.listen(PORT, () => {
     console.log(`🔗 Mode: ${process.env.RPC_URL ? 'BLOCKCHAIN (real)' : 'MOCK (demo)'}\n`);
 });
 
-module.exports = app;
+export default app;
