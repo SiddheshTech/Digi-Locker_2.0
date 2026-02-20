@@ -40,16 +40,8 @@ import TermsOfService from './pages/TermsOfService';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import IssuerDashboard from './pages/issuer/IssuerDashboard';
+import StudentDashboard from './pages/student/StudentDashboard';
 
-// Issuer Components
-import IssuerLayout from './layouts/IssuerLayout';
-import Dashboard from './pages/issuer/Dashboard';
-import IssueCredential from './pages/issuer/IssueCredential';
-import RecordsList from './pages/issuer/RecordsList';
-import BatchIssue from './pages/issuer/BatchIssue';
-import KeyManagement from './pages/issuer/KeyManagement';
-import Templates from './pages/issuer/Templates';
-import Alerts from './pages/issuer/Alerts';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -70,7 +62,8 @@ function App() {
   const isAppView = path.startsWith('/dashboard') ||
     path.startsWith('/login') ||
     path.startsWith('/signup') ||
-    path.startsWith('/issuer');
+    path.startsWith('/issuer') ||
+    path.startsWith('/student');
 
   return (
     <>
@@ -100,16 +93,8 @@ function App() {
           <Route path="/resources/case-studies" element={<PageTransition><CaseStudies /></PageTransition>} />
           <Route path="/resources/faq" element={<PageTransition><Faq /></PageTransition>} />
           <Route path="/dashboard/*" element={<PageTransition><DashboardPreview /></PageTransition>} />
-          <Route path="/issuer" element={<IssuerLayout />}>
-            <Route index element={<PageTransition><IssuerDashboard /></PageTransition>} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="issue" element={<IssueCredential />} />
-            <Route path="records" element={<RecordsList />} />
-            <Route path="batch" element={<BatchIssue />} />
-            <Route path="keys" element={<KeyManagement />} />
-            <Route path="templates" element={<Templates />} />
-            <Route path="alerts" element={<Alerts />} />
-          </Route>
+          <Route path="/issuer/*" element={<PageTransition><IssuerDashboard /></PageTransition>} />
+          <Route path="/student/*" element={<PageTransition><StudentDashboard /></PageTransition>} />
           <Route path="/verify" element={<PageTransition><VerificationPortal /></PageTransition>} />
           <Route path="/institution-portal" element={<PageTransition><InstitutionPortal /></PageTransition>} />
           <Route path="/privacy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />

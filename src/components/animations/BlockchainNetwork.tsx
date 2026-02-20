@@ -1,13 +1,17 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 const BlockchainNetwork = () => {
-    const nodes = Array.from({ length: 15 }, (_, i) => ({
+    const nodes = useMemo(() => Array.from({ length: 15 }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
         size: Math.random() * 4 + 2,
         delay: Math.random() * 5,
-    }));
+        targetX: Math.random() * 5 - 2.5,
+        targetY: Math.random() * 5 - 2.5,
+        duration: 4 + Math.random() * 4
+    })), []);
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
@@ -23,11 +27,11 @@ const BlockchainNetwork = () => {
                         animate={{
                             opacity: [0.3, 0.8, 0.3],
                             scale: [0.8, 1.2, 0.8],
-                            x: [0, Math.random() * 5 - 2.5, 0],
-                            y: [0, Math.random() * 5 - 2.5, 0]
+                            x: [0, node.targetX, 0],
+                            y: [0, node.targetY, 0]
                         }}
                         transition={{
-                            duration: 4 + Math.random() * 4,
+                            duration: node.duration,
                             repeat: Infinity,
                             delay: node.delay
                         }}

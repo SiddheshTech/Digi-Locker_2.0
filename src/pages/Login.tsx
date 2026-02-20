@@ -20,7 +20,7 @@ export default function Login() {
         // Simulate login
         setTimeout(() => {
             setLoading(false);
-            const redirectPath = role === 'institution' ? '/issuer' : (role === 'student' ? '/dashboard' : '/verify');
+            const redirectPath = role === 'institution' ? '/issuer' : (role === 'student' ? '/student' : '/verify');
             window.location.href = redirectPath;
         }, 1500);
     };
