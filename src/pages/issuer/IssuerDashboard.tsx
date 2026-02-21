@@ -1,6 +1,12 @@
 import { Bell, Search, ChevronDown, LayoutDashboard, FileText, Key, Filter, Download, Plus, Settings } from 'lucide-react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
-import { IssuerOverview, IssueCredential, RecordsList, KeyManagement, BatchIssue, TemplateManager, FraudAlerts } from './IssuerViews';
+import Dashboard from './Dashboard';
+import IssueCred from './IssueCred';
+import RecordsList from './RecordsList';
+import KeyManagement from './KeyManagement';
+import BatchIssue from './BatchIssue';
+import Templates from './Templates';
+import Alerts from './Alerts';
 import './Issuer.css';
 import WalletButton from '../../components/wallet/WalletButton';
 
@@ -75,13 +81,13 @@ export default function IssuerDashboard() {
 
                     <div className="issuer-content">
                         <Routes>
-                            <Route index element={<IssuerOverview />} />
-                            <Route path="issue" element={<IssueCredential />} />
+                            <Route index element={<Dashboard />} />
+                            <Route path="issue" element={<IssueCred />} />
                             <Route path="records" element={<RecordsList />} />
                             <Route path="keys" element={<KeyManagement />} />
                             <Route path="batch" element={<BatchIssue />} />
-                            <Route path="templates" element={<TemplateManager />} />
-                            <Route path="alerts" element={<FraudAlerts />} />
+                            <Route path="templates" element={<Templates />} />
+                            <Route path="alerts" element={<Alerts />} />
                         </Routes>
                     </div>
                 </main>

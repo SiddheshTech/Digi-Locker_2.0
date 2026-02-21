@@ -1,5 +1,5 @@
 /**
- * index.js — Digi-Locker Issuer Backend v2.0
+ * index.js — Digi-Locker Issuer Backend v2.0 (Updated: 2026-02-20)
  *
  * Technology Stack:
  *   - Node.js + Express
@@ -20,11 +20,10 @@
  *   /api/alerts/*    — alerts.js   (fraud alerts)
  */
 
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
-dotenv.config();
 
 import issuerRoutes from './routes/issuer.js';
 import recordsRoutes from './routes/records.js';
@@ -52,12 +51,13 @@ app.use('/api/templates', templatesRoutes);
 app.use('/api/alerts', alertsRoutes);
 
 // ── Health Check ─────────────────────────────────────────────────────────────
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
     res.json({
         status: 'ok',
         service: 'Digi-Locker Issuer Backend',
-        version: '2.0.0',
+        version: '2.0.1',
         mode: process.env.RPC_URL ? 'BLOCKCHAIN (real)' : 'MOCK (demo)',
+        credentialsCount: (await import('./data/store.js')).default.credentials.length,
         timestamp: new Date().toISOString(),
         endpoints: {
             issue: ['GET /api/issue/stats', 'POST /api/issue/prepare', 'POST /api/issue/finalize', 'POST /api/issue/batch'],

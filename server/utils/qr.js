@@ -3,11 +3,11 @@ import QRCode from 'qrcode';
 /**
  * utils/qr.js — QR code + verification URL
  */
-const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 export function getVerificationUrl(payloadHash) {
     const h = payloadHash.replace(/^0x/, '');
-    return `${BASE_URL}/api/verify/${h}`;
+    return `${FRONTEND_URL}/verify?hash=${h}`;
 }
 
 export async function generateQRCode(payloadHash) {

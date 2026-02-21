@@ -1,6 +1,7 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { LayoutDashboard, FilePlus, FileText, KeyRound, AlertTriangle, Upload, ShieldCheck, RotateCcw, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useWallet } from "@/context/WalletContext";
 
 const navItems = [
   { label: "Dashboard", path: "/issuer/dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
@@ -12,6 +13,8 @@ const navItems = [
 ];
 
 const KeyManagement = () => {
+  const { address, isConnected } = useWallet();
+
   return (
     <DashboardLayout role="issuer" roleLabel="Institution / Issuer" navItems={navItems}>
       <div className="max-w-3xl space-y-6">
@@ -31,12 +34,12 @@ const KeyManagement = () => {
             </div>
           </div>
           <div className="p-4 bg-muted rounded-lg">
-            <code className="text-sm font-mono text-accent break-all">0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18</code>
+            <code className="text-sm font-mono text-accent break-all">{address || "0x... (Connect Wallet)"}</code>
           </div>
           <div className="flex items-center gap-2 mt-4">
-            <span className="w-2 h-2 rounded-full bg-accent" />
-            <span className="text-sm text-accent font-medium">Active</span>
-            <span className="text-xs text-muted-foreground ml-2">Since Jan 1, 2026</span>
+            <span className={`w-2 h-2 rounded-full ${isConnected ? "bg-accent" : "bg-destructive"}`} />
+            <span className={`text-sm font-medium ${isConnected ? "text-accent" : "text-destructive"}`}>{isConnected ? "Active" : "Disconnected"}</span>
+            {isConnected && <span className="text-xs text-muted-foreground ml-2">Currently connected</span>}
           </div>
         </div>
 

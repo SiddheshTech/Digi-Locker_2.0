@@ -17,7 +17,7 @@ import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
-import store from '../data/store.js';
+import store, { persist } from '../data/store.js';
 import { sha256 } from '../utils/crypto.js';
 import { verifyTransaction, queryCredentialOnChain } from '../utils/blockchain.js';
 import { generateApiKey, hashApiKey } from '../utils/apiKeyAuth.js';
@@ -60,9 +60,10 @@ router.post('/verify', upload.single('file'), async (req, res) => {
             });
         }
 
-        const cred = store.credentials.find(c =>
-            c.payloadHash === payloadHash || c.payload?.fileHash === payloadHash
-        );
+        const cred = store.credentials.find(c => {
+            const h = '0x' + payloadHash.replace(/^0x/, '');
+            return c.payloadHash === h || c.payload?.fileHash === payloadHash || c.payload?.fileHash === h;
+        });
 
         let onChain = null;
         if (process.env.CONTRACT_ADDRESS && process.env.RPC_URL) {
@@ -114,6 +115,7 @@ router.post('/verify', upload.single('file'), async (req, res) => {
             credentialId: cred?.id
         };
         store.verifierSavedVerifications.push(savedRecord);
+        persist();
 
         const verifiedMessage = status === 'Verified'
             ? `This file matches an on-chain record anchored by ${issuerId}. Tx: ${txHash || 'N/A'}`
@@ -144,8 +146,14 @@ router.post('/verify', upload.single('file'), async (req, res) => {
 
 // GET /api/verifier/verify/:hash — verify by hash (public, for links/QR)
 router.get('/verify/:hash', async (req, res) => {
-    const payloadHash = String(req.params.hash).replace(/^0x/, '').replace(/\s/g, '');
-    const cred = store.credentials.find(c => c.payloadHash === payloadHash || c.payload?.fileHash === payloadHash);
+    const rawHash = String(req.params.hash).trim();
+    const payloadHash = '0x' + rawHash.replace(/^0x/, '');
+
+    const cred = store.credentials.find(c =>
+        c.payloadHash === payloadHash ||
+        c.payload?.fileHash === rawHash ||
+        c.payload?.fileHash === payloadHash
+    );
     let onChain = null;
     if (process.env.CONTRACT_ADDRESS && process.env.RPC_URL) {
         onChain = await queryCredentialOnChain(payloadHash);
@@ -188,6 +196,7 @@ router.get('/verify/:hash', async (req, res) => {
         verifiedAt: new Date().toISOString(),
         credentialId: cred?.id
     });
+    persist();
 
     res.json({
         status,

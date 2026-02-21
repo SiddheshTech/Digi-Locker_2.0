@@ -1,8 +1,10 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutDashboard, FolderOpen, Share2, ClipboardList, Award, BarChart3, Eye, Download, QrCode, CheckCircle2, Clock, Shield } from "lucide-react";
+import { LayoutDashboard, FolderOpen, Share2, ClipboardList, Award, BarChart3, Eye, Download, QrCode, CheckCircle2, Clock, Shield, XCircle, Loader2, AlertTriangle, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
 
 const navItems = [
   { label: "Dashboard", path: "/student/dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
@@ -21,22 +23,70 @@ const credentials = [
   { id: 5, title: "AWS Cloud Practitioner", issuer: "Amazon Web Services", status: "verified", date: "Nov 5, 2025", tx: "0x3c6b...d95e", type: "Certification" },
 ];
 
-const [shareModalId, setShareModalId] = [0, () => {}]; // placeholder
+const [shareModalId, setShareModalId] = [0, () => { }]; // placeholder
 
 const StudentCredentials = () => {
-  const [selectedCred, setSelectedCred] = useState<number | null>(null);
+  const [selectedCred, setSelectedCred] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [qrData, setQrData] = useState<{ url: string, qrDataUrl: string } | null>(null);
+  const [loadingQr, setLoadingQr] = useState(false);
+
+  // Use the actual credentials from the store/API in a real app, 
+  // but for now we'll fetch them from the backend if possible.
+  const [records, setRecords] = useState<any[]>([]);
+
+  useState(() => {
+    axios.get("http://localhost:5000/api/records").then(res => {
+      setRecords(res.data.results || []);
+    }).catch(err => {
+      console.error("Failed to fetch records", err);
+    });
+  });
+
+  const handleShareClick = async (cred: any) => {
+    setSelectedCred(cred);
+    setShowShareModal(true);
+    setLoadingQr(true);
+    setQrData(null);
+    try {
+      const res = await axios.get(`http://localhost:5000/api/records/${cred.id}/qr`);
+      setQrData(res.data);
+    } catch (err) {
+      console.error("Failed to fetch QR", err);
+    } finally {
+      setLoadingQr(false);
+    }
+  };
+
+  const handleDownloadQR = () => {
+    if (!qrData) return;
+    const link = document.createElement("a");
+    link.href = qrData.qrDataUrl;
+    link.download = `credential-qr-${selectedCred?.id}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleCopyLink = () => {
+    if (!qrData) return;
+    navigator.clipboard.writeText(qrData.url);
+    toast({
+      title: "Link Copied",
+      description: "Verification link copied to clipboard.",
+    });
+  };
 
   return (
     <DashboardLayout role="student" roleLabel="Student / Holder" navItems={navItems}>
       <div className="space-y-6">
         <div>
           <h2 className="text-2xl font-display font-bold text-foreground">My Credentials</h2>
-          <p className="text-sm text-muted-foreground mt-1">{credentials.length} verified credentials in your wallet</p>
+          <p className="text-sm text-muted-foreground mt-1">{records.length || credentials.length} verified credentials in your wallet</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {credentials.map((cred, i) => (
+          {(records.length > 0 ? records : credentials).map((cred, i) => (
             <motion.div
               key={cred.id}
               initial={{ opacity: 0, y: 12 }}
@@ -45,26 +95,26 @@ const StudentCredentials = () => {
               className="bg-card rounded-xl p-5 card-elevated border border-border hover:border-accent/30 transition-all"
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="px-2.5 py-1 rounded-md bg-muted text-xs font-medium text-muted-foreground">{cred.type}</span>
-                <span className={cred.status === "verified" ? "badge-verified" : "badge-pending"}>
-                  {cred.status === "verified" ? <><CheckCircle2 className="w-3 h-3" /> Verified</> : <><Clock className="w-3 h-3" /> Pending</>}
+                <span className="px-2.5 py-1 rounded-md bg-muted text-xs font-medium text-muted-foreground">{cred.type || "Degree"}</span>
+                <span className={cred.status === "verified" || cred.status === "issued" ? "badge-verified" : "badge-pending"}>
+                  {cred.status === "verified" || cred.status === "issued" ? <><CheckCircle2 className="w-3 h-3" /> Verified</> : <><Clock className="w-3 h-3" /> Pending</>}
                 </span>
               </div>
 
-              <h3 className="text-sm font-semibold text-foreground mb-1">{cred.title}</h3>
-              <p className="text-xs text-muted-foreground mb-1">{cred.issuer}</p>
-              <p className="text-xs text-muted-foreground">{cred.date}</p>
+              <h3 className="text-sm font-semibold text-foreground mb-1">{cred.title || cred.payload?.degree}</h3>
+              <p className="text-xs text-muted-foreground mb-1">{cred.issuer || cred.payload?.issuerId}</p>
+              <p className="text-xs text-muted-foreground">{cred.date || (cred.issuedAt ? new Date(cred.issuedAt).toLocaleDateString() : 'N/A')}</p>
 
-              {cred.tx !== "pending" && (
+              {(cred.tx !== "pending" && cred.txHash) && (
                 <div className="mt-3 flex items-center gap-1.5">
                   <Shield className="w-3 h-3 text-accent" />
-                  <code className="text-[10px] text-accent font-mono">{cred.tx}</code>
+                  <code className="text-[10px] text-accent font-mono">{(cred.txHash || cred.tx).slice(0, 16)}...</code>
                 </div>
               )}
 
               <div className="flex gap-2 mt-4">
                 <Button variant="outline" size="sm" className="text-xs h-8 flex-1 gap-1"><Eye className="w-3 h-3" /> View</Button>
-                <Button variant="outline" size="sm" className="text-xs h-8 flex-1 gap-1" onClick={() => setShowShareModal(true)}>
+                <Button variant="outline" size="sm" className="text-xs h-8 flex-1 gap-1" onClick={() => handleShareClick(cred)}>
                   <Share2 className="w-3 h-3" /> Share
                 </Button>
                 <Button variant="outline" size="sm" className="text-xs h-8 gap-1"><Download className="w-3 h-3" /></Button>
@@ -87,30 +137,39 @@ const StudentCredentials = () => {
               className="bg-card rounded-2xl p-8 max-w-md w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="text-lg font-display font-semibold text-foreground mb-2">Share Credential</h3>
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="text-lg font-display font-semibold text-foreground">Share Credential</h3>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setShowShareModal(false)}><XCircle className="w-4 h-4" /></Button>
+              </div>
               <p className="text-sm text-muted-foreground mb-6">
-                By sharing this link you disclose ONLY the fields you selected. You can revoke access anytime.
+                Scan this QR code or share the link to verify this credential instantly.
               </p>
 
-              <div className="space-y-3 mb-6">
-                <h4 className="text-sm font-medium text-foreground">Select fields to disclose:</h4>
-                {["Degree Name", "Institution", "Year of Completion", "CGPA / Grade", "Student Name", "Roll Number"].map((field) => (
-                  <label key={field} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
-                    <input type="checkbox" defaultChecked={["Degree Name", "Institution", "Year of Completion"].includes(field)} className="rounded border-border accent-accent" />
-                    <span className="text-sm text-foreground">{field}</span>
-                  </label>
-                ))}
+              <div className="flex items-center justify-center p-6 bg-muted rounded-xl mb-6 relative min-h-[200px]">
+                {loadingQr ? (
+                  <div className="flex flex-col items-center gap-3">
+                    <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                    <p className="text-xs text-muted-foreground">Generating QR Code...</p>
+                  </div>
+                ) : qrData ? (
+                  <div className="bg-white p-3 rounded-lg shadow-sm">
+                    <img src={qrData.qrDataUrl} alt="Credential QR Code" className="w-40 h-40" />
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <AlertTriangle className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
+                    <p className="text-xs text-muted-foreground">Failed to load QR code</p>
+                  </div>
+                )}
               </div>
 
-              <div className="flex items-center justify-center p-6 bg-muted rounded-xl mb-4">
-                <div className="w-32 h-32 bg-foreground/10 rounded-lg flex items-center justify-center">
-                  <QrCode className="w-16 h-16 text-muted-foreground" />
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Button className="flex-1 accent-gradient text-accent-foreground border-0">Copy Share Link</Button>
-                <Button variant="outline" className="flex-1">Download QR</Button>
+              <div className="flex gap-2 mt-4">
+                <Button className="flex-1 accent-gradient text-accent-foreground border-0" onClick={handleCopyLink} disabled={!qrData}>
+                  <Copy className="w-4 h-4 mr-2" /> Copy Link
+                </Button>
+                <Button variant="outline" className="flex-1" onClick={handleDownloadQR} disabled={!qrData}>
+                  <Download className="w-4 h-4 mr-2" /> Download
+                </Button>
               </div>
             </motion.div>
           </motion.div>

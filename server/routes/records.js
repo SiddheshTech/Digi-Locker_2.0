@@ -9,7 +9,7 @@
 
 import express from 'express';
 const router = express.Router();
-import store from '../data/store.js';
+import store, { persist } from '../data/store.js';
 import { revokeOnChain } from '../utils/blockchain.js';
 import { buildVerifiableCredential } from '../utils/vc.js';
 import { generateQRCode } from '../utils/qr.js';
@@ -64,6 +64,7 @@ router.post('/:id/revoke', async (req, res) => {
         cred.revocationTxHash = chainResult.txHash;
         cred.revocationSignature = signature;
         cred.payload.revocationFlag = true;
+        persist();
 
         res.json({ success: true, credentialId: cred.id, revocationTxHash: chainResult.txHash, revokedAt: cred.revokedAt });
     } catch (err) {

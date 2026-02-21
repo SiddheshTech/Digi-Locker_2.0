@@ -1,7 +1,9 @@
+import { loadStore, saveStore } from './persistence.js';
+
 /**
- * data/store.js — In-memory data store
+ * data/store.js — In-memory data store with JSON persistence
  */
-const store = {
+const initialStore = {
     credentials: [],
     revocations: [],
     verifierSavedVerifications: [],
@@ -25,4 +27,7 @@ const store = {
     batchJobs: []
 };
 
+const store = loadStore(initialStore);
+
+export const persist = () => saveStore(store);
 export default store;

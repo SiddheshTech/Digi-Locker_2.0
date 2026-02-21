@@ -1,8 +1,12 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { motion } from "framer-motion";
-import { LayoutDashboard, FilePlus, FileText, KeyRound, AlertTriangle, Upload, TrendingUp, Clock, XCircle, CheckCircle2 } from "lucide-react";
+import { LayoutDashboard, FilePlus, FileText, KeyRound, AlertTriangle, Upload, TrendingUp, Clock, XCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const API = "http://localhost:5000";
 
 const navItems = [
   { label: "Dashboard", path: "/issuer/dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
@@ -13,22 +17,47 @@ const navItems = [
   { label: "Fraud Alerts", path: "/issuer/alerts", icon: <AlertTriangle className="w-4 h-4" /> },
 ];
 
-const metrics = [
-  { label: "Total Issued", value: "12,847", change: "+234 this month", icon: CheckCircle2, trend: "up" },
-  { label: "Pending Transactions", value: "18", change: "3 awaiting confirm", icon: Clock, trend: "neutral" },
-  { label: "Revoked", value: "42", change: "+2 this week", icon: XCircle, trend: "down" },
-  { label: "Verifications", value: "8,921", change: "+1,204 this month", icon: TrendingUp, trend: "up" },
-];
-
-const recentActivity = [
-  { type: "issued", name: "B.Tech Certificate — Rahul Sharma", time: "2 hours ago", tx: "0x7f3a...e91b" },
-  { type: "verified", name: "M.Sc Transcript — Priya Patel", time: "4 hours ago", tx: "0x8b2c...f43d" },
-  { type: "revoked", name: "Diploma — Fake Entry #4891", time: "1 day ago", tx: "0x1a5e...b72f" },
-  { type: "issued", name: "B.Com Certificate — Amit Kumar", time: "1 day ago", tx: "0x9d4f...a18c" },
-  { type: "issued", name: "Ph.D Certificate — Dr. Neha Singh", time: "2 days ago", tx: "0x3c6b...d95e" },
-];
-
 const IssuerDashboard = () => {
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get(`${API}/api/issue/stats`);
+        setStats(res.data);
+      } catch (err) {
+        console.error("Failed to fetch stats", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (loading) return (
+    <DashboardLayout role="issuer" roleLabel="Institution / Issuer" navItems={navItems}>
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-accent" />
+      </div>
+    </DashboardLayout>
+  );
+
+  const metrics = [
+    { label: "Total Issued", value: stats?.totalIssued || 0, change: "+0 this month", icon: CheckCircle2, trend: "up" },
+    { label: "Current Issued", value: stats?.issued || 0, change: "Active", icon: Clock, trend: "neutral" },
+    { label: "Revoked", value: stats?.revoked || 0, change: "Invalidated", icon: XCircle, trend: "down" },
+    { label: "Active Alerts", value: stats?.alertCount || 0, change: "Security scan", icon: TrendingUp, trend: "up" },
+  ];
+
+  const recentActivity = stats?.recentVerifications?.map((v: any) => ({
+    type: "verified",
+    name: `Verification: ${v.studentName}`,
+    time: new Date(v.lastVerified).toLocaleTimeString(),
+    tx: v.id.slice(0, 8) + "..."
+  })) || [
+      { type: "idle", name: "No recent activity", time: "-", tx: "-" }
+    ];
   return (
     <DashboardLayout role="issuer" roleLabel="Institution / Issuer" navItems={navItems}>
       <div className="space-y-6">
@@ -84,9 +113,8 @@ const IssuerDashboard = () => {
               {recentActivity.map((item, i) => (
                 <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                   <div className="flex items-center gap-3">
-                    <span className={`w-2 h-2 rounded-full ${
-                      item.type === "issued" ? "bg-accent" : item.type === "verified" ? "bg-accent" : "bg-destructive"
-                    }`} />
+                    <span className={`w-2 h-2 rounded-full ${item.type === "issued" ? "bg-accent" : item.type === "verified" ? "bg-accent" : "bg-destructive"
+                      }`} />
                     <div>
                       <p className="text-sm font-medium text-foreground">{item.name}</p>
                       <p className="text-xs text-muted-foreground">{item.time}</p>

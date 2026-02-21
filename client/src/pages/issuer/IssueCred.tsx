@@ -92,20 +92,40 @@ const IssueCred = () => {
         year: form.year,
         serialNo: form.serialNo,
         fileHash,
-        issuerId: address,
+      }, {
+        headers: {
+          "x-issuer-address": address || "0xMOCK_ISSUER"
+        }
       });
-      const { payloadHash, canonical } = prepRes.data;
-      setPayload(JSON.parse(canonical));
+      const { payloadHash, canonical, payload: serverPayload } = prepRes.data;
+
+      let currentPayload = serverPayload;
+      if (!currentPayload && canonical && canonical !== "undefined") {
+        try {
+          currentPayload = JSON.parse(canonical);
+        } catch (e) {
+          console.error("Failed to parse canonical payload:", e);
+        }
+      }
+
+      if (currentPayload) {
+        setPayload(currentPayload);
+      } else {
+        console.warn("No payload or canonical data received from server");
+      }
 
       // Step 2 — MetaMask sign
       setStep("sign");
       const signer = await getSigner();
       if (!signer) throw new Error("No signer available");
-      const signature = await signer.signMessage(ethers.getBytes("0x" + payloadHash));
+      const signature = await signer.signMessage(ethers.getBytes(payloadHash));
+
+      console.log("Finalizing issuance with:", { payload: currentPayload, payloadHash, signature, issuerId: address });
 
       // Step 3 — Finalize (server anchors on-chain)
       setStep("finalize");
       const finalRes = await axios.post(`${API}/api/issue/finalize`, {
+        payload: currentPayload, // Send payload to server
         payloadHash,
         signature,
         issuerId: address,

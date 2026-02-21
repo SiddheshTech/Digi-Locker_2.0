@@ -16,14 +16,29 @@ import { verifyVCStructure } from '../utils/vc.js';
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Verify by Payload Hash — tamper detection
-router.get('/:payloadHash', async (req, res) => {
-    const { payloadHash } = req.params;
-    const cred = store.credentials.find(c => c.payloadHash === payloadHash);
+router.get('/:hash', async (req, res) => {
+    let { hash } = req.params;
+
+    // Normalize: ensure 0x prefix and no spaces
+    if (hash && !hash.startsWith('0x')) hash = '0x' + hash.trim();
+
+    // Search both payloadHash AND fileHash
+    console.log(`[VERIFY] Searching for hash: ${hash}`);
+    console.log(`[VERIFY] Current credentials in store: ${store.credentials.length}`);
+    if (store.credentials.length > 0) {
+        console.log(`[VERIFY] First credential payloadHash: ${store.credentials[0].payloadHash}`);
+    }
+
+    const cred = store.credentials.find(c =>
+        c.payloadHash === hash ||
+        c.payload?.fileHash === hash ||
+        c.payload?.fileHash === hash.replace(/^0x/, '')
+    );
 
     if (!cred) {
         return res.status(404).json({
             verified: false, authentic: false, tampered: true,
-            message: 'No credential found with this hash. Document may be tampered or never issued here.'
+            message: 'No credential found matching this hash/file. Document may be tampered or never issued here.'
         });
     }
 

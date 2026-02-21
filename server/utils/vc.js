@@ -1,6 +1,7 @@
 /**
  * utils/vc.js — W3C Verifiable Credential (JSON-LD) builder
  */
+import { getVerificationUrl } from './qr.js';
 import { sha256 } from './crypto.js';
 
 export function buildVerifiableCredential(record) {
@@ -26,7 +27,7 @@ export function buildVerifiableCredential(record) {
             serialNo: payload.serialNo || ''
         },
         credentialStatus: {
-            id: `http://localhost:5000/api/verify/${payloadHash}`,
+            id: getVerificationUrl(payloadHash),
             type: 'CredentialStatusList2017'
         },
         proof: {
@@ -39,22 +40,6 @@ export function buildVerifiableCredential(record) {
             payloadHash
         }
     };
-}
-
-export function getVerificationUrl(payloadHash) {
-    return `${BASE_URL}/api/verify/${payloadHash}`;
-}
-
-export async function generateQRCode(payloadHash) {
-    const url = getVerificationUrl(payloadHash);
-    const qrDataUrl = await QRCode.toDataURL(url, { errorCorrectionLevel: 'H', width: 300 });
-    return { url, qrDataUrl };
-}
-
-export async function generateQRCodeSVG(payloadHash) {
-    const url = getVerificationUrl(payloadHash);
-    const svg = await QRCode.toString(url, { type: 'svg' });
-    return { url, svg };
 }
 
 export function verifyVCStructure(vc) {

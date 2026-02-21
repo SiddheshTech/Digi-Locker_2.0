@@ -14,7 +14,7 @@ import csv from 'csv-parser';
 import { Readable } from 'stream';
 import { v4 as uuidv4 } from 'uuid';
 
-import store from '../data/store.js';
+import store, { persist } from '../data/store.js';
 import { buildCredentialPayload, buildMerkleTree, getMerkleProof, canonicalizeCredential } from '../utils/crypto.js';
 import { signPayloadHash, issueOnChain } from '../utils/blockchain.js';
 import { buildVerifiableCredential } from '../utils/vc.js';
@@ -54,6 +54,7 @@ router.post('/prepare', async (req, res) => {
         res.json({
             payload,
             payloadHash,
+            canonical: JSON.stringify(payload),
             onChainPreview: {
                 issuerId, hash: payloadHash, timestamp: payload.timestamp, revocationFlag: false,
                 note: 'No PII on-chain. Only: issuerId, hash, timestamp, revocationFlag.'
@@ -98,6 +99,7 @@ router.post('/finalize', async (req, res) => {
         const anomalies = detectAnomalies(payload, payload.issuerId);
         if (anomalies.length) saveAlerts(anomalies, payloadHash, payload.issuerId);
         store.credentials.push(record);
+        persist();
 
         const vc = asVC ? buildVerifiableCredential(record) : undefined;
 
@@ -112,48 +114,101 @@ router.post('/finalize', async (req, res) => {
 });
 
 // ── Batch Issuance: CSV → Merkle Root ───────────────────────────────────────
-// POST /api/issue/batch  multipart: file=students.csv
-// CSV columns: studentName, rollNo, degree, year, serialNo, fileHash
 router.post('/batch', upload.single('file'), async (req, res) => {
     try {
-        if (!req.file) return res.status(400).json({ error: 'No CSV file uploaded' });
+        console.log('[BATCH] Starting batch issuance...');
+        if (!req.file) {
+            console.error('[BATCH] Error: No file uploaded');
+            return res.status(400).json({ error: 'No CSV file uploaded' });
+        }
         const issuerId = req.headers['x-issuer-address'] || '0xMOCK_ISSUER';
         const rows = [];
 
         await new Promise((resolve, reject) => {
             Readable.from(req.file.buffer.toString())
                 .pipe(csv())
-                .on('data', row => rows.push(row))
+                .on('data', row => {
+                    // Check if row is empty or object
+                    if (row && typeof row === 'object' && Object.keys(row).length) {
+                        rows.push(row);
+                    }
+                })
                 .on('end', resolve)
-                .on('error', reject);
+                .on('error', err => {
+                    console.error('[BATCH] CSV Parser Error:', err.message);
+                    reject(err);
+                });
         });
 
-        if (!rows.length) return res.status(400).json({ error: 'CSV is empty' });
+        console.log(`[BATCH] Parsed ${rows.length} rows from CSV.`);
+        if (!rows.length) {
+            console.error('[BATCH] Error: CSV is empty or invalid header.');
+            return res.status(400).json({ error: 'CSV is empty or invalid header. Expected: studentName, rollNo, degree, year, serialNo, fileHash' });
+        }
 
-        const leaves = rows.map(row => buildCredentialPayload(
-            { studentName: row.studentName, rollNo: row.rollNo, degree: row.degree, year: row.year, serialNo: row.serialNo || '' },
-            row.fileHash || 'no-file', issuerId
-        ));
+        const leaves = rows.map((row, i) => {
+            try {
+                return buildCredentialPayload(
+                    { studentName: row.studentName, rollNo: row.rollNo || '', degree: row.degree || '', year: row.year || '', serialNo: row.serialNo || '' },
+                    row.fileHash || 'no-file', issuerId
+                );
+            } catch (err) {
+                console.error(`[BATCH] Error building payload for row ${i}:`, err.message);
+                throw err;
+            }
+        });
 
-        // Use canonicalizeCredential for Merkle Tree leaves
-        const leafHashes = leaves.map(l => canonicalizeCredential(l.payload));
+        const leafHashes = leaves.map(l => l.payloadHash);
         const tree = buildMerkleTree(leafHashes);
         const root = tree.getHexRoot();
-
-        const studentsWithProofs = leaves.map((leaf, i) => ({
-            index: i,
-            studentName: leaf.payload.studentName,
-            rollNo: leaf.payload.rollNo,
-            payloadHash: leaf.payloadHash,
-            merkleProof: getMerkleProof(tree, canonicalizeCredential(leaf.payload))
-        }));
+        console.log(`[BATCH] Merkle Tree built. Root: ${root}`);
 
         const chainResult = await issueOnChain(root, issuerId);
         const batchId = uuidv4();
-        store.batchJobs.push({ id: batchId, merkleRoot: root, txHash: chainResult.txHash, studentCount: rows.length, students: studentsWithProofs, issuedAt: new Date().toISOString(), issuerId });
+
+        const studentsWithProofs = leaves.map((leaf, i) => {
+            const proof = getMerkleProof(tree, leaf.payloadHash);
+
+            // PUSH INDIVIDUAL RECORDS TO STORE so they are searchable by hash
+            const record = {
+                id: uuidv4(),
+                ...leaf,
+                txHash: chainResult.txHash,
+                batchId,
+                status: 'issued',
+                revoked: false,
+                issuedAt: new Date().toISOString(),
+                isBatch: true,
+                merkleProof: proof,
+                merkleRoot: root
+            };
+            store.credentials.push(record);
+
+            return {
+                index: i,
+                studentName: leaf.payload.studentName,
+                rollNo: leaf.payload.rollNo,
+                payloadHash: leaf.payloadHash,
+                merkleProof: proof
+            };
+        });
+
+        store.batchJobs.push({
+            id: batchId,
+            merkleRoot: root,
+            txHash: chainResult.txHash,
+            studentCount: rows.length,
+            students: studentsWithProofs,
+            issuedAt: new Date().toISOString(),
+            issuerId
+        });
+
+        console.log(`[BATCH] Successfully completed batch ${batchId}. Persisting...`);
+        persist();
 
         res.status(201).json({ success: true, batchId, merkleRoot: root, txHash: chainResult.txHash, studentCount: rows.length, students: studentsWithProofs });
     } catch (err) {
+        console.error('[BATCH] Critical Error:', err.stack);
         res.status(500).json({ error: err.message });
     }
 });
