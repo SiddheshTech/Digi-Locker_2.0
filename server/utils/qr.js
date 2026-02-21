@@ -21,3 +21,8 @@ export async function generateQRCodeSVG(payloadHash) {
     const svg = await QRCode.toString(url, { type: 'svg' });
     return { url, svg };
 }
+
+export async function generateQRFromText(text) {
+    const qrDataUrl = await QRCode.toDataURL(text, { errorCorrectionLevel: 'H', width: 300 });
+    return qrDataUrl;
+}

@@ -1,50 +1,36 @@
 {
   "credentials": [
     {
-      "id": "test-1771598880799",
-      "payloadHash": "0xTEST_HASH",
-      "payload": {
-        "studentName": "Test Student",
-        "fileHash": "TEST_FILE_HASH"
-      },
-      "issuedAt": "2026-02-20T14:48:00.799Z"
-    },
-    {
-      "id": "test-1771599706573",
-      "payloadHash": "0xTEST_HASH",
-      "payload": {
-        "studentName": "Test Student",
-        "fileHash": "TEST_FILE_HASH"
-      },
-      "issuedAt": "2026-02-20T15:01:46.573Z"
-    },
-    {
-      "id": "05dc61a8-3160-4850-9335-5bf2f2868f62",
-      "payload": {
-        "studentName": "dasdsad",
-        "rollNo": "2323223434",
-        "degree": "dsfdfdfsf",
-        "year": "342423",
-        "serialNo": "fs2342423423423",
-        "fileHash": "4792d4af9e8b2dcc8265c77b3c67a9b1f0f96b83e678bf43296bebbeee6df4d6",
-        "issuerId": "0x71774bd3e1553c843b01008f34d538d110b023d3",
-        "timestamp": "2026-02-21T05:53:58.616Z",
-        "version": "1.0"
-      },
-      "payloadHash": "0xd2f4bce74c483dd5989b3e63644f8b21e6051c2329d4d2d1d48f4ae2c6f8af41",
-      "signature": "0xd08f5e3157081fc4e0b4965317b305265a0a69d3828ccffc9ab9abafccff18904a5927816ed0c186813d27ec63dc72933f6dd01ba79aa267966fe3fde7f456a21b",
-      "serverSignature": "0x93511e13971c7d8a2a89489af4b1a15eba9eaa9f0e6cc44cba69119d06b9c9960850cd1239572a9fc1a06a59a444f05798a46abba198e3a005e2625ec8f8a1e81c",
-      "txHash": "0xb292c729791ef6b5c7f4ae81e3ee9bab687355d7d7e77daee9a6122e48c713f5",
-      "blockNumber": 2,
-      "chainMock": false,
+      "id": "cred-001",
+      "studentWallet": "0x1234567890123456789012345678901234567890",
+      "issuerId": "0xISSUER_U_OF_TECH",
       "status": "issued",
-      "revoked": false,
-      "revokedReason": null,
-      "revokedAt": null,
-      "issuedAt": "2026-02-21T05:54:06.286Z",
-      "lastVerified": null,
-      "verificationUrl": "http://localhost:5000/api/verify/d2f4bce74c483dd5989b3e63644f8b21e6051c2329d4d2d1d48f4ae2c6f8af41",
-      "qrDataUrl": "data:image/png;base64,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"
+      "createdAt": "2025-01-15T10:00:00Z",
+      "payloadHash": "0x88f572c8...",
+      "merkleRoot": "0x99a215b1...",
+      "metadata": {
+        "title": "Bachelor of Science in Computer Science",
+        "studentName": "John Doe",
+        "rollNo": "CS-2021-001",
+        "year": "2025",
+        "gpa": "3.9",
+        "specialization": "Artificial Intelligence"
+      }
+    },
+    {
+      "id": "cred-002",
+      "studentWallet": "0x1234567890123456789012345678901234567890",
+      "issuerId": "0xISSUER_AWS",
+      "status": "issued",
+      "createdAt": "2025-02-10T14:30:00Z",
+      "payloadHash": "0x44d21e8a...",
+      "merkleRoot": "0x55c32f9b...",
+      "metadata": {
+        "title": "AWS Certified Solutions Architect",
+        "studentName": "John Doe",
+        "certificateId": "AWS-990-112",
+        "issuedDate": "2025-02-10"
+      }
     }
   ],
   "revocations": [],
@@ -62,7 +48,7 @@
         "serialNo",
         "specialization"
       ],
-      "createdAt": "2026-02-20T14:48:00.790Z"
+      "createdAt": "2026-02-21T11:24:33.545Z"
     },
     {
       "id": "tpl-002",
@@ -74,22 +60,148 @@
         "year",
         "courses"
       ],
-      "createdAt": "2026-02-20T14:48:00.794Z"
+      "createdAt": "2026-02-21T11:24:33.547Z"
     }
   ],
   "multiSigProposals": [],
-  "alerts": [
+  "alerts": [],
+  "batchJobs": [],
+  "shares": [
     {
-      "type": "FUTURE_DATE",
-      "severity": "MEDIUM",
-      "confidence": 0.85,
-      "message": "Year \"342423\" is in the future (current: 2026).",
-      "suggestedAction": "Verify the graduation year.",
-      "payloadHash": "0xd2f4bce74c483dd5989b3e63644f8b21e6051c2329d4d2d1d48f4ae2c6f8af41",
-      "issuerId": "0x71774bd3e1553c843b01008f34d538d110b023d3",
-      "timestamp": "2026-02-21T05:54:06.286Z",
-      "resolved": false
+      "id": "3e4895db-fef5-4bf2-a8ad-7c01f08902a0",
+      "credentialId": "cred-001",
+      "credentialTitle": "Bachelor of Science in Computer Science",
+      "studentAddress": "0x1234567890123456789012345678901234567890",
+      "expiresAt": null,
+      "verifiers": [],
+      "selectiveFields": [
+        "title",
+        "year"
+      ],
+      "oneClickVerify": false,
+      "createdAt": "2026-02-21T11:26:29.090Z",
+      "analytics": {
+        "clicks": 0,
+        "logs": []
+      }
+    },
+    {
+      "id": "d1b8a2d3-41d2-4f12-b9b0-3f51b608c189",
+      "credentialId": "cred-001",
+      "credentialTitle": "Bachelor of Science in Computer Science",
+      "studentAddress": "0x1234567890123456789012345678901234567890",
+      "expiresAt": null,
+      "verifiers": [],
+      "selectiveFields": [
+        "title",
+        "year"
+      ],
+      "oneClickVerify": false,
+      "createdAt": "2026-02-21T11:26:39.733Z",
+      "analytics": {
+        "clicks": 0,
+        "logs": []
+      }
+    },
+    {
+      "id": "4dcb7eeb-7def-4a15-b98a-d631b1d1fc3a",
+      "credentialId": "cred-001",
+      "credentialTitle": "Bachelor of Science in Computer Science",
+      "studentAddress": "0x1234567890123456789012345678901234567890",
+      "expiresAt": null,
+      "verifiers": [],
+      "selectiveFields": [
+        "title",
+        "year"
+      ],
+      "oneClickVerify": false,
+      "createdAt": "2026-02-21T11:26:51.090Z",
+      "analytics": {
+        "clicks": 2,
+        "logs": [
+          {
+            "timestamp": "2026-02-21T11:27:06.571Z",
+            "ip": "::1",
+            "userAgent": "Go-http-client/1.1",
+            "location": "Mock Geo (US)"
+          },
+          {
+            "timestamp": "2026-02-21T11:27:06.568Z",
+            "ip": "::1",
+            "userAgent": "Go-http-client/1.1",
+            "location": "Mock Geo (US)"
+          }
+        ]
+      }
     }
   ],
-  "batchJobs": []
+  "consents": [
+    {
+      "id": "4d2acbf8-7268-4fdc-9b39-6f0aee888cee",
+      "studentAddress": "0x1234567890123456789012345678901234567890",
+      "credentialId": "cred-001",
+      "credentialTitle": "Bachelor of Science in Computer Science",
+      "accessedBy": "Verifier/Employer",
+      "timestamp": "2026-02-21T11:27:06.568Z",
+      "fieldsDisclosed": [
+        "title",
+        "year"
+      ],
+      "ip": "::1"
+    },
+    {
+      "id": "676039d7-5d0d-49ed-a798-d298bf329125",
+      "studentAddress": "0x1234567890123456789012345678901234567890",
+      "credentialId": "cred-001",
+      "credentialTitle": "Bachelor of Science in Computer Science",
+      "accessedBy": "Verifier/Employer",
+      "timestamp": "2026-02-21T11:27:06.571Z",
+      "fieldsDisclosed": [
+        "title",
+        "year"
+      ],
+      "ip": "::1"
+    }
+  ],
+  "students": [
+    {
+      "address": "0x1234567890123456789012345678901234567890",
+      "name": "John Doe",
+      "bio": "Aspiring Blockchain Developer | CS Senior at Tech University",
+      "skills": [
+        "Ethereum",
+        "React",
+        "Node.js",
+        "Cryptography"
+      ],
+      "badges": [
+        {
+          "title": "Top Coder 2024",
+          "issuer": "HackerRank",
+          "icon": "🏆"
+        },
+        {
+          "title": "Open Source Contributor",
+          "issuer": "GitHub",
+          "icon": "🌟"
+        }
+      ],
+      "microCredentials": [
+        {
+          "title": "Solidity Advanced",
+          "hash": "0xabc123...",
+          "date": "2024-11-20"
+        }
+      ],
+      "experience": [
+        {
+          "role": "Blockchain Intern",
+          "company": "CryptoSolutions",
+          "duration": "3 months"
+        }
+      ],
+      "updatedAt": "2026-02-21T11:24:33.547Z"
+    }
+  ],
+  "requests": []
 }

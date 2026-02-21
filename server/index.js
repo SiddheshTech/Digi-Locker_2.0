@@ -32,6 +32,7 @@ import verifierRoutes from './routes/verifier.js';
 import keysRoutes from './routes/keys.js';
 import templatesRoutes from './routes/templates.js';
 import alertsRoutes from './routes/alerts.js';
+import studentRoutes from './routes/student.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -49,6 +50,16 @@ app.use('/api/verifier', verifierRoutes);
 app.use('/api/keys', keysRoutes);
 app.use('/api/templates', templatesRoutes);
 app.use('/api/alerts', alertsRoutes);
+app.use('/api/student', studentRoutes);
+
+// ── Welcome ──────────────────────────────────────────────────────────────────
+app.get('/', (req, res) => {
+    res.json({
+        message: '🚀 Digi-Locker Issuer Backend is Running',
+        health: '/api/health',
+        documentation: '/api/health'
+    });
+});
 
 // ── Health Check ─────────────────────────────────────────────────────────────
 app.get('/api/health', async (req, res) => {
@@ -66,7 +77,8 @@ app.get('/api/health', async (req, res) => {
             verifier: ['POST /api/verifier/verify', 'GET /api/verifier/verify/:hash', 'GET /api/verifier/saved', 'GET /api/verifier/saved/export', 'POST /api/verifier/batch', 'GET/POST/DELETE /api/verifier/apikeys', 'GET /api/verifier/receipt/:id', 'POST /api/verifier/qr-offline', 'GET /api/verifier/snippets'],
             keys: ['GET /api/keys/info', 'POST /api/keys/rotate', 'GET /api/keys/multisig', 'POST /api/keys/multisig/propose'],
             templates: ['GET /api/templates', 'POST /api/templates', 'PUT /api/templates/:id', 'DELETE /api/templates/:id'],
-            alerts: ['GET /api/alerts', 'POST /api/alerts/:i/resolve']
+            alerts: ['GET /api/alerts', 'POST /api/alerts/:i/resolve'],
+            student: ['GET /api/student/dashboard', 'GET /api/student/credentials', 'POST /api/student/share', 'GET /api/student/consents', 'GET /api/student/profile', 'GET /api/student/shares/analytics']
         }
     });
 });
