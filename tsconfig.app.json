@@ -30,6 +30,6 @@
     "esModuleInterop": true
   },
   "include": [
-    "src"
+    "client/src"
   ]
 }
