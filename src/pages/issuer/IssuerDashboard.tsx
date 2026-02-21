@@ -1,7 +1,7 @@
 import { Bell, Search, ChevronDown, LayoutDashboard, FileText, Key, Filter, Download, Plus, Settings } from 'lucide-react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import Dashboard from './Dashboard';
-import IssueCred from './IssueCred';
+import IssueCred from './IssueCredential';
 import RecordsList from './RecordsList';
 import KeyManagement from './KeyManagement';
 import BatchIssue from './BatchIssue';
